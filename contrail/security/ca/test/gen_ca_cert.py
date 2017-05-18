@@ -18,7 +18,7 @@ def gen_ca_cert(dn, years_validity=5):
     ca_cert.set_version(x509_version - 1)
     ca_cert.set_serial_number(1)
     subj = ca_cert.get_subject()
-    for k, v in dn.items():
+    for k, v in list(dn.items()):
         setattr(subj, k, v)
         
     ca_cert.gmtime_adj_notBefore(0)       

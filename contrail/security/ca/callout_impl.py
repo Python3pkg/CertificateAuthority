@@ -97,7 +97,7 @@ class CertificateAuthorityWithCallout(AbstractCertificateAuthority):
     
     @cert_issue_cmd.setter
     def cert_issue_cmd(self, value):
-        if not isinstance(value, basestring):
+        if not isinstance(value, str):
             raise TypeError('Expecting string type for "cert_issue_cmd" '
                             'got %r type' % type(value))
         self.__cert_issue_cmd = value

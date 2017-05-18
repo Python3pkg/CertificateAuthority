@@ -51,7 +51,7 @@ class CertificateAuthority(AbstractCertificateAuthority):
 
     @not_before_time_nsecs.setter
     def not_before_time_nsecs(self, value):
-        if not isinstance(value, (long, int, basestring)):
+        if not isinstance(value, (int, str)):
             raise TypeError('Expecting int, long or string type for '
                             '"not_before_time_nsecs" got %r type' % type(value))
         
@@ -66,7 +66,7 @@ class CertificateAuthority(AbstractCertificateAuthority):
 
     @not_after_time_nsecs.setter
     def not_after_time_nsecs(self, value):
-        if not isinstance(value, (long, int, basestring)):
+        if not isinstance(value, (int, str)):
             raise TypeError('Expecting int, long or string type for '
                             '"not_after_time_nsecs" got %r type' % type(value))
             
@@ -78,7 +78,7 @@ class CertificateAuthority(AbstractCertificateAuthority):
     
     @digest.setter
     def digest(self, value):
-        if not isinstance(value, basestring):
+        if not isinstance(value, str):
             raise TypeError('Expecting string type for "digest" '
                             'got %r type' % type(value))
         self.__digest = value
@@ -89,7 +89,7 @@ class CertificateAuthority(AbstractCertificateAuthority):
     
     @certificate_version.setter
     def certificate_version(self, value):
-        if not isinstance(value, basestring):
+        if not isinstance(value, str):
             raise TypeError('Expecting string type for "certificate_version" '
                             'got %r type' % type(value))
         self.__certificate_version = value
@@ -101,11 +101,11 @@ class CertificateAuthority(AbstractCertificateAuthority):
 
     @ca_true.setter
     def ca_true(self, value):
-        if isinstance(value, basestring):
+        if isinstance(value, str):
             self.__ca_true = value.lower() in ('1', 'true')
             
-        elif isinstance(value, (long, int)):
-            self.__ca_true = long(value)
+        elif isinstance(value, int):
+            self.__ca_true = int(value)
         else:
             raise TypeError('Expecting int or long type for '
                             '"ca_true" got %r type' % type(value))
@@ -117,11 +117,11 @@ class CertificateAuthority(AbstractCertificateAuthority):
 
     @subject_alt_name.setter
     def subject_alt_name(self, value):
-        if isinstance(value, basestring):
+        if isinstance(value, str):
             self.__subject_alt_name = value.lower() in ('1', 'true')
             
-        elif isinstance(value, (long, int)):
-            self.__subject_alt_name = long(value)
+        elif isinstance(value, int):
+            self.__subject_alt_name = int(value)
         else:
             raise TypeError('Expecting int or long type for '
                             '"ca_true" got %r type' % type(value))        
@@ -195,7 +195,7 @@ class CertificateAuthority(AbstractCertificateAuthority):
         x509_extensions = [basic_constraints_ext]
             
         # Check for a subject alt names extension, if present add as is.
-        if isinstance(subject_alt_name, basestring):
+        if isinstance(subject_alt_name, str):
             subject_alt_name_ext = crypto.X509Extension('subjectAltName', 
                                                         False, 
                                                         subject_alt_name)

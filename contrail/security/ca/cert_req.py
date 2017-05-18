@@ -58,7 +58,7 @@ class CertReqUtils(object):
         cert_req = crypto.X509Req()
         subj = cert_req.get_subject()
     
-        for k, v in dn.items():
+        for k, v in list(dn.items()):
             setattr(subj, k, v)
         
         # Create public key object

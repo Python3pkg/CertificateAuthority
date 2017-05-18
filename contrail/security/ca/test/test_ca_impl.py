@@ -73,7 +73,7 @@ class CertificateAuthorityTestCase(CertificateAuthorityBaseTestCase):
                     print(ext_dat)
                     dec = decode(ext_dat, asn1Spec=GeneralNames())
                     print(dec)
-                    print(dec[0].prettyPrint())
+                    print((dec[0].prettyPrint()))
                     for i in range(len(dec[0])):
                         dns_name = str(
                                 dec[0].getComponentByPosition(i).getComponent())

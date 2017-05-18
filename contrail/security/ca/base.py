@@ -6,7 +6,7 @@ __copyright__ = "(C) 2012 Science and Technology Facilities Council"
 __license__ = "BSD - see LICENSE file in top-level directory"
 __contact__ = "Philip.Kershaw@stfc.ac.uk"
 __revision__ = "$Id$"
-from ConfigParser import ConfigParser, SafeConfigParser
+from configparser import ConfigParser, SafeConfigParser
 from os import path
 from abc import ABCMeta, abstractmethod
 import logging
@@ -27,17 +27,15 @@ class CertificateIssuingError(CertificateAuthorityError):
     """Error issuing a certificate"""
     
     
-class AbstractCertificateAuthority(object):
+class AbstractCertificateAuthority(object, metaclass=ABCMeta):
     """Provide basic functionality for a Certificate Authority"""
     CERTIFICATE_VERSION2 = 1
     CERTIFICATE_VERSION3 = 2
     CERT_FILEPATH_OPTNAME = "cert_filepath"
     PRIKEY_FILEPATH_OPTNAME = "key_filepath"
     PRIKEY_PASSWD_OPTNAME = "key_passwd"
-    SERIAL_NUM_DEFAULT = 0L
+    SERIAL_NUM_DEFAULT = 0
     MIN_KEY_NBITS_DEFAULT = 2048
-    
-    __metaclass__ = ABCMeta
     __slots__ = (
         '__cert', 
         '__key', 
@@ -85,7 +83,7 @@ class AbstractCertificateAuthority(object):
         @param section: configuration file section from which to extract
         parameters.
         '''  
-        if isinstance(cfg, basestring):
+        if isinstance(cfg, str):
             config_file_path = path.expandvars(cfg)
             here_dir = path.dirname(config_file_path)
             _cfg = SafeConfigParser(defaults={'here':here_dir})
@@ -114,7 +112,7 @@ class AbstractCertificateAuthority(object):
             cert_filepath = kw.pop(cert_filepath_opt)
             prikey_filepath = kw.pop(prikey_filepath_opt)
             
-        except KeyError, e:
+        except KeyError as e:
             raise CertificateAuthorityConfigError('Missing option from config '
                                                   '%s' % str(e))
 
@@ -153,7 +151,7 @@ class AbstractCertificateAuthority(object):
         variable names.  However, they may prefixed with <prefix>
         """        
         prefix_len = len(prefix)
-        for opt_name, val in kw.items():
+        for opt_name, val in list(kw.items()):
             if prefix:
                 # Filter attributes based on prefix
                 if opt_name.startswith(prefix):
@@ -261,10 +259,10 @@ class AbstractCertificateAuthority(object):
 
     @serial_num_counter.setter
     def serial_num_counter(self, value):
-        if not isinstance(value, (long, int)):
+        if not isinstance(value, int):
             raise TypeError('Expecting int or long type for '
                             '"serial_num_counter" got %r type' % type(value))
-        self.__serial_num_counter = long(value)
+        self.__serial_num_counter = int(value)
         
     @property
     def serial_filepath(self):
@@ -272,7 +270,7 @@ class AbstractCertificateAuthority(object):
     
     @serial_filepath.setter
     def serial_filepath(self, value):
-        if not isinstance(value, basestring):
+        if not isinstance(value, str):
             raise TypeError('Expecting string type for "serial_filepath" '
                             'got %r type' % type(value))
         self.__serial_filepath = value
@@ -284,17 +282,17 @@ class AbstractCertificateAuthority(object):
 
     @min_key_nbits.setter
     def min_key_nbits(self, value):
-        if not isinstance(value, (long, int, basestring)):
+        if not isinstance(value, (int, str)):
             raise TypeError('Expecting int or long type for "min_key_nbits" '
                             'got %r type' % type(value))
-        self.__min_key_nbits = long(value)
+        self.__min_key_nbits = int(value)
           
     def _read_serial_file(self):
         '''Read serial number from serial file'''
         serial_file = open(self.serial_filepath, 'r')
         
         try:
-            self.serial_num_counter = long(serial_file.read())
+            self.serial_num_counter = int(serial_file.read())
         finally:
             serial_file.close()
                     
